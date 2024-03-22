@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #result{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 25vh;
+            width: 30vw;
+            border-radius: 15px;
+            box-shadow: 2px 2px 5px rgb(184, 184, 184);
+            margin: 10px;
+        }
+
+        .formDiv{
+            /* border : 1px solid red; */
+            width: 30vw;
+            margin: auto;
+            height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px ;
+            box-shadow: 2px 2px 5px rgb(193, 193, 193);
+        }
+        .formDiv form{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .formDiv form div{
+            margin: 30px
+        }
+
+        .formDiv form div input{
+
+            border-radius: 3px;
+            padding: 5px;
+            color: rgb(83, 83, 83);
+            box-shadow: 2px 2px 5px rgb(192, 192, 192);
+        }
+
+        .formDiv form div label{
+
+            font-weight: bold;
+            font-size: 1.5rem;
+            font-family: sans-serif;
+            margin-right: 10px;
+        }
+
+        #submitBtn{
+
+            padding: .5rem;
+            width: 15vw;
+            font-size: 1.5rem;
+            border-radius: 5px;
+            background-color: black;
+            color: white;
+            box-shadow: 2px 2px 5px rgb(196, 196, 196);
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div id="result">
+
+    </div>
+
+    <div class="formDiv">
+        <form id="mainForm">
+            <div>
+                <label for="brand">Brand</label>
+                <input type="text" name="brand" id="brand">
+            </div>
+
+            <div>
+                <label for="model">Model</label>
+                <input type="text" name="model" id="model">
+            </div>
+            <div>
+                <label for="price">Price</label>
+                <input type="number" name="price" id="price">
+            </div>
+            <input id="submitBtn" type="submit" value="Add Data">
+
+        </form>
+    </div>
+
+    <script>
+
+
+
+
+
+        fetch('http://localhost:8000/television/')
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                data.map((cval) => {
+                    document.querySelector('#result').innerHTML+=`
+                        <div class="card">
+                            <h2>${cval.brand}</h2>
+                            <h2>${cval.model}</h2>
+                            <h2>${cval.price}</h2>
+
+                        </div>
+                    `
+                })
+            }).catch((error) => {
+                console.log(console.log(error))
+            })
+
+            
+            const mainForm = document.querySelector('#mainForm')
+
+            mainForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const brand = document.querySelector('#brand').value;
+                const model = document.querySelector('#model').value;
+                const price = parseInt(document.querySelector('#price').value);
+
+                const data = {
+                    brand : brand,
+                    model : model,
+                    price : price
+                }
+
+                try{
+                    fetch('http://localhost:8000/television/', {
+    
+                        method : "POST",
+                        headers : {
+                            "Content-Type" : "application/json"
+                        },
+                        body :  JSON.stringify(data),
+    
+                    })
+                }catch(error){
+                    console.log(error)
+                }
+
+
+            })
+
+    </script>
+</body>
+
+</html>
